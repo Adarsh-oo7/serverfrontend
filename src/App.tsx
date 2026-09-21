@@ -84,6 +84,23 @@ export function App() {
           </button>
           {error && <p>{error}</p>}
         </form>
+        <div style={{ marginTop: "24px", paddingTop: "16px", borderTop: "1px solid #30363d" }}>
+          <a
+            href="/app-debug.apk"
+            download="PrivateAndroidCloud.apk"
+            style={{
+              display: "inline-block",
+              padding: "10px 16px",
+              background: "#1f6feb",
+              color: "#fff",
+              textDecoration: "none",
+              borderRadius: "8px",
+              fontWeight: 600,
+            }}
+          >
+            📱 Download Android APK (22 MB)
+          </a>
+        </div>
       </main>
     );
   }
