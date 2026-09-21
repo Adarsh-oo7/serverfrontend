@@ -177,9 +177,9 @@ export function App() {
                 </div>
               ) : (
                 onlineServers.map((dev) => {
-                  const targetIp = dev.lanIpv4 || customIp || "192.168.1.15";
+                  const targetIp = dev.lanIpv4 || customIp;
                   const targetPort = dev.lanPort || 8443;
-                  const directUrl = `http://${targetIp}:${targetPort}`;
+                  const directUrl = targetIp ? `http://${targetIp}:${targetPort}` : null;
 
                   return (
                     <div
@@ -211,33 +211,48 @@ export function App() {
                             fontWeight: 600,
                           }}
                         >
-                          🟢 DATA PLANE ACTIVE
+                          🟢 CONTROL PLANE CONNECTED
                         </span>
                       </div>
 
                       <div style={{ marginTop: "20px", padding: "16px", background: "#0d1117", borderRadius: "8px", border: "1px solid #30363d" }}>
-                        <div style={{ fontWeight: 600, marginBottom: "6px" }}>Local Cloud Address:</div>
-                        <div style={{ fontSize: "1.1rem", color: "#58a6ff", fontFamily: "monospace" }}>{directUrl}</div>
-                        <p style={{ color: "#8b949e", fontSize: "0.85rem", marginTop: "6px", marginBottom: "16px" }}>
-                          Connect your laptop / PC to the same Wi-Fi as your phone, then click below to browse, upload, and stream files directly!
-                        </p>
-                        <a
-                          href={directUrl}
-                          target="_blank"
-                          rel="noreferrer"
-                          style={{
-                            display: "inline-block",
-                            padding: "12px 24px",
-                            background: "#238636",
-                            color: "#fff",
-                            textDecoration: "none",
-                            borderRadius: "8px",
-                            fontWeight: 700,
-                            fontSize: "1rem",
-                          }}
-                        >
-                          🚀 Open Phone Storage Portal ({targetIp}:{targetPort})
-                        </a>
+                        <div style={{ fontWeight: 600, marginBottom: "6px" }}>Local Phone Storage Address:</div>
+                        {directUrl ? (
+                          <>
+                            <div style={{ fontSize: "1.1rem", color: "#58a6ff", fontFamily: "monospace", marginBottom: "8px" }}>{directUrl}</div>
+                            <p style={{ color: "#8b949e", fontSize: "0.85rem", marginBottom: "16px" }}>
+                              Your phone and laptop are on the same Wi-Fi. Click below to access your phone's file storage directly:
+                            </p>
+                            <a
+                              href={directUrl}
+                              target="_blank"
+                              rel="noreferrer"
+                              style={{
+                                display: "inline-block",
+                                padding: "12px 24px",
+                                background: "#238636",
+                                color: "#fff",
+                                textDecoration: "none",
+                                borderRadius: "8px",
+                                fontWeight: 700,
+                                fontSize: "1rem",
+                              }}
+                            >
+                              🚀 Open Phone Storage Portal ({targetIp}:{targetPort})
+                            </a>
+                          </>
+                        ) : (
+                          <>
+                            <div style={{ padding: "12px", background: "#21262d", borderRadius: "6px", border: "1px solid #d29922", color: "#e3b341" }}>
+                              ⚠️ <strong>Local Wi-Fi IP Not Yet Reported</strong>
+                              <p style={{ margin: "6px 0 0 0", fontSize: "0.85rem", color: "#c9d1d9" }}>
+                                1. Open the <strong>Private Android Cloud</strong> app on your phone.<br />
+                                2. On the <strong>Home</strong> tab, see <strong>Local Server URL</strong> (e.g. <code>http://192.168.0.xxx:8443</code>).<br />
+                                3. Enter that IP in the box below to connect immediately, or install the updated APK so it auto-reports.
+                              </p>
+                            </div>
+                          </>
+                        )}
                       </div>
                     </div>
                   );
@@ -245,33 +260,37 @@ export function App() {
               )}
 
               <div className="card" style={{ padding: "20px", background: "#161b22", border: "1px solid #30363d" }}>
-                <h3 style={{ margin: 0, fontSize: "1rem" }}>Manual IP Connection (Optional)</h3>
+                <h3 style={{ margin: 0, fontSize: "1rem" }}>Direct Wi-Fi IP Connect</h3>
                 <p style={{ color: "#8b949e", fontSize: "0.85rem", marginTop: "4px" }}>
-                  If your phone's IP is different (shown on your phone's home screen):
+                  Check your phone's <strong>Home</strong> screen in the app for its exact local IP:
                 </p>
-                <div style={{ display: "flex", gap: "8px", marginTop: "10px", alignItems: "center" }}>
+                <div style={{ display: "flex", gap: "8px", marginTop: "10px", alignItems: "center", flexWrap: "wrap" }}>
                   <input
                     style={{ width: "240px", padding: "8px 12px", background: "#0d1117", color: "#fff", border: "1px solid #30363d", borderRadius: "6px" }}
-                    placeholder="e.g. 192.168.1.15"
+                    placeholder="e.g. 192.168.0.115"
                     value={customIp}
-                    onChange={(e) => setCustomIp(e.target.value)}
+                    onChange={(e) => setCustomIp(e.target.value.trim())}
                   />
-                  <a
-                    href={`http://${customIp || "192.168.1.15"}:8443`}
-                    target="_blank"
-                    rel="noreferrer"
-                    style={{
-                      padding: "8px 16px",
-                      background: "#1f6feb",
-                      color: "#fff",
-                      textDecoration: "none",
-                      borderRadius: "6px",
-                      fontWeight: 600,
-                      fontSize: "0.85rem",
-                    }}
-                  >
-                    Open URL
-                  </a>
+                  {customIp ? (
+                    <a
+                      href={`http://${customIp}:8443`}
+                      target="_blank"
+                      rel="noreferrer"
+                      style={{
+                        padding: "8px 16px",
+                        background: "#1f6feb",
+                        color: "#fff",
+                        textDecoration: "none",
+                        borderRadius: "6px",
+                        fontWeight: 600,
+                        fontSize: "0.85rem",
+                      }}
+                    >
+                      Open http://{customIp}:8443 ↗
+                    </a>
+                  ) : (
+                    <span style={{ color: "#8b949e", fontSize: "0.85rem" }}>Enter IP from phone screen to open portal</span>
+                  )}
                 </div>
               </div>
 
@@ -323,18 +342,22 @@ export function App() {
                     <td><code>{d.lanIpv4 ? `${d.lanIpv4}:${d.lanPort || 8443}` : "—"}</code></td>
                     <td>
                       {d.online && (
-                        <a
-                          href={`http://${d.lanIpv4 || "192.168.1.15"}:${d.lanPort || 8443}`}
-                          target="_blank"
-                          rel="noreferrer"
-                          style={{
-                            color: "#58a6ff",
-                            textDecoration: "none",
-                            fontWeight: 600,
-                          }}
-                        >
-                          Open Storage ↗
-                        </a>
+                        d.lanIpv4 ? (
+                          <a
+                            href={`http://${d.lanIpv4}:${d.lanPort || 8443}`}
+                            target="_blank"
+                            rel="noreferrer"
+                            style={{
+                              color: "#58a6ff",
+                              textDecoration: "none",
+                              fontWeight: 600,
+                            }}
+                          >
+                            Open Storage ↗
+                          </a>
+                        ) : (
+                          <span style={{ color: "#8b949e", fontSize: "0.85rem" }}>Pending LAN IP</span>
+                        )
                       )}
                     </td>
                   </tr>
