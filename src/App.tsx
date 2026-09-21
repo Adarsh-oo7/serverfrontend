@@ -86,7 +86,7 @@ export function App() {
         </form>
         <div style={{ marginTop: "24px", paddingTop: "16px", borderTop: "1px solid #30363d" }}>
           <a
-            href="/app-debug.apk"
+            href="/PrivateAndroidCloud.apk"
             download="PrivateAndroidCloud.apk"
             style={{
               display: "inline-block",
